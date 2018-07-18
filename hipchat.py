@@ -41,5 +41,21 @@ def fetch_emoticons():
         )
 
 
+def send(room, message):
+    path = f'/v2/room/{room}/notification'
+    if not path.startswith('https://'):
+        path = f'https://{hipchat_org}.hipchat.com/{path}'
+    response = requests.post(
+        path,
+        json=message,
+        headers={'Authorization': f'Bearer {talk_token}'},
+    )
+    if response.status_code == 401:
+        print("Authentication error! Make sure you are using a valid HIPCHAT_TALK_TOKEN.")
+        raise Exception
+    response.raise_for_status()
+
+
 token = os.environ.get('HIPCHAT_TOKEN')
+talk_token = os.environ.get('HIPCHAT_TALK_TOKEN')
 hipchat_org = os.environ.get('HIPCHAT_ORG')
