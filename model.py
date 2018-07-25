@@ -7,10 +7,14 @@ import requests
 
 
 @attr.s(frozen=True)
-class Emoticon:
+class ComparableEmoticon:
+    """
+    Partial emoticon data which compares equivalent on only name and url.
+    """
     name = attr.ib()
     url = attr.ib()
     id = attr.ib(default=None, cmp=False)
+    added_by = attr.ib(default=None, cmp=False)
 
 
 @attr.s

@@ -37,6 +37,7 @@ emoticon_table = sqlalchemy.Table(
     sqlalchemy.Column('added'),
     sqlalchemy.Column('removed'),
     sqlalchemy.Column('image'),
+    sqlalchemy.Column('added_by'),
     schema='wp_hipchat',
 )
 
@@ -47,6 +48,7 @@ def _to_row(emoticon):
     return {
         'name': emoticon.name,
         'url': emoticon.url,
+        'added_by': emoticon.added_by,
         'image': image.raw_data,
         'added': image.created,
     }
@@ -79,12 +81,14 @@ def fetch_emoticons():
         emoticon_table.c.id,
         emoticon_table.c.name,
         emoticon_table.c.url,
+        emoticon_table.c.added_by,
     ]).where(emoticon_table.c.removed.is_(None))
     return (
-        model.Emoticon(
+        model.ComparableEmoticon(
             id=row.id,
             name=row.name,
             url=row.url,
+            added_by=row.added_by,
         ) for row in connection.execute(query)
     )
 
@@ -95,6 +99,7 @@ def get_changes_since(since_date):
         emoticon_table.c.id,
         emoticon_table.c.name,
         emoticon_table.c.url,
+        emoticon_table.c.added_by,
     ]).where(sqlalchemy.or_(
         emoticon_table.c.added > since_date,
         emoticon_table.c.removed > since_date,
@@ -102,10 +107,11 @@ def get_changes_since(since_date):
 
     return {
         removed: [
-            model.Emoticon(
+            model.ComparableEmoticon(
                 id=row.id,
                 name=row.name,
                 url=row.url,
+                added_by=row.added_by,
             ) for row in rows
         ]
         for removed, rows in itertools.groupby(connection.execute(query), lambda row: row.removed)

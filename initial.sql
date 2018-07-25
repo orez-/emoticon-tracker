@@ -7,5 +7,6 @@ CREATE TABLE wp_hipchat.emoticon (
     _row_created TIMESTAMP DEFAULT now() NOT NULL,
     added TIMESTAMP,
     removed TIMESTAMP,
-    image BYTEA NOT NULL
+    image BYTEA NOT NULL,
+    added_by TEXT NOT NULL
 );

@@ -34,10 +34,11 @@ def _get_api_items(path):
 
 
 def fetch_emoticons():
-    for emoticon_payload in _get_api_items('v2/emoticon?type=group&max-results=1000'):
-        yield model.Emoticon(
+    for emoticon_payload in _get_api_items('v2/emoticon?type=group&max-results=1000&expand=items'):
+        yield model.ComparableEmoticon(
             name=emoticon_payload['shortcut'],
             url=emoticon_payload['url'],
+            added_by=emoticon_payload['creator']['name'] if emoticon_payload['creator'] else None,
         )
 
 
