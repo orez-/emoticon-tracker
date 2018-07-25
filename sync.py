@@ -1,5 +1,9 @@
+import collections
 import db
 import hipchat
+
+
+Changes = collections.namedtuple('Changes', 'added removed')
 
 
 def _update_db_emoticons(db_emoticons, remote_emoticons):
@@ -9,18 +13,23 @@ def _update_db_emoticons(db_emoticons, remote_emoticons):
     new_emoticons = remote_emoticons - db_emoticons
     removed_emoticons = db_emoticons - remote_emoticons
 
-    db.add_emoticons(new_emoticons)
-    db.remove_emoticons(removed_emoticons)
+    added = db.add_emoticons(new_emoticons)
+    removed = db.remove_emoticons(removed_emoticons)
+    return Changes(
+        added=added,
+        removed=removed,
+    )
 
 
 def update_db_emoticons():
     db_emoticons = db.fetch_emoticons()
     remote_emoticons = hipchat.fetch_emoticons()
-    _update_db_emoticons(
+    return _update_db_emoticons(
         db_emoticons=db_emoticons,
         remote_emoticons=remote_emoticons,
     )
 
 
 if __name__ == '__main__':
-    update_db_emoticons()
+    added, removed = update_db_emoticons()
+    print("added:", added, "; removed:", removed)

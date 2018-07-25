@@ -59,6 +59,7 @@ def add_emoticons(emoticons):
     if emoticon_rows:
         query = emoticon_table.insert().values(emoticon_rows)
         connection.execute(query)
+    return [emoticon.name for emoticon in emoticons]
 
 
 def remove_emoticons(emoticons):
@@ -70,6 +71,7 @@ def remove_emoticons(emoticons):
             .where(emoticon_table.c.id.in_(emoticon_ids))
         )
         connection.execute(query)
+    return [emoticon.name for emoticon in emoticons]
 
 
 def fetch_emoticons():
