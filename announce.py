@@ -1,6 +1,7 @@
 import datetime
 
 import dateutil.parser
+import pytz
 
 import db
 import hipchat
@@ -66,7 +67,8 @@ def get_change_message(changes):
 
 def announce_changes():
     sync.update_db_emoticons()
-    now = datetime.datetime.utcnow()  # get now as soon as possible after syncing.
+    # get now as soon as possible after syncing
+    now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
 
     last_time = get_last_announcement_time()
     if not last_time:
