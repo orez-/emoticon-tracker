@@ -1,4 +1,5 @@
 import datetime
+import os.path
 
 import dateutil.parser
 import pytz
@@ -8,7 +9,8 @@ import hipchat
 import sync
 
 
-ANNOUNCEMENT_FILE = '.last_announcement'
+_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+ANNOUNCEMENT_FILE = os.path.join(_SCRIPT_DIR, '.last_announcement')
 _numbers = {
     1: 'one',
     2: 'two',
