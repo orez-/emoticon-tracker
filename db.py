@@ -70,7 +70,10 @@ def remove_emoticons(emoticons):
         query = (
             emoticon_table.update()
             .values({'removed': sqlalchemy.func.now()})
-            .where(emoticon_table.c.id.in_(emoticon_ids))
+            .where(sqlalchemy.and_(
+                emoticon_table.c.id.in_(emoticon_ids),
+                emoticon_table.c.removed.is_(None),
+            ))
         )
         connection.execute(query)
     return [emoticon.name for emoticon in emoticons]
