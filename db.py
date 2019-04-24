@@ -38,20 +38,25 @@ emoticon_table = sqlalchemy.Table(
     sqlalchemy.Column('removed'),
     sqlalchemy.Column('image'),
     sqlalchemy.Column('added_by'),
-    schema='wp_hipchat',
+    schema='wp_slack',
 )
 
 
 def _to_row(emoticon):
-    image = model.get_image(emoticon.url)
-
-    return {
+    row = {
         'name': emoticon.name,
         'url': emoticon.url,
         'added_by': emoticon.added_by,
-        'image': image.raw_data,
-        'added': image.created,
     }
+
+    if emoticon.url.startswith('http'):
+        image = model.get_image(emoticon.url)
+        row.update({
+            'image': image.raw_data,
+            'added': image.created,
+        })
+
+    return row
 
 
 def add_emoticons(emoticons):

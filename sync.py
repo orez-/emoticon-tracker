@@ -1,6 +1,8 @@
 import collections
+import datetime
+
 import db
-import hipchat
+import slack
 
 
 Changes = collections.namedtuple('Changes', 'added removed')
@@ -23,7 +25,7 @@ def _update_db_emoticons(db_emoticons, remote_emoticons):
 
 def update_db_emoticons():
     db_emoticons = db.fetch_emoticons()
-    remote_emoticons = hipchat.fetch_emoticons()
+    remote_emoticons = slack.fetch_emoticons()
     return _update_db_emoticons(
         db_emoticons=db_emoticons,
         remote_emoticons=remote_emoticons,
@@ -32,4 +34,4 @@ def update_db_emoticons():
 
 if __name__ == '__main__':
     added, removed = update_db_emoticons()
-    print("added:", added, "; removed:", removed)
+    print(datetime.datetime.now(), "added:", added, "; removed:", removed)
