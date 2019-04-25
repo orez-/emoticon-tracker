@@ -8,5 +8,5 @@ CREATE TABLE wp_slack.emoticon (
     added TIMESTAMP,
     removed TIMESTAMP,
     image BYTEA,
-    added_by TEXT NOT NULL
+    added_by TEXT
 );

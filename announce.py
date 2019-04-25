@@ -5,7 +5,7 @@ import dateutil.parser
 import pytz
 
 import db
-import hipchat
+import slack
 import sync
 
 
@@ -85,11 +85,12 @@ def announce_changes():
 
     message = get_change_message(changes)
     # hipchat.send('4528315', {  # test room
-    hipchat.send('1738275', {  # emoticon requests
-        'color': 'purple',
-        'message': message,
-        'message_format': 'text',
-    })
+    # hipchat.send('1738275', {  # emoticon requests
+    #     'color': 'purple',
+    #     'message': message,
+    #     'message_format': 'text',
+    # })
+    slack.send('#emoticon-requests', message)
 
     log_last_announcement(now)
     print(message)

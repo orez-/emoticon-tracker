@@ -13,9 +13,15 @@ def raise_for_slack_status(response):
 
 
 def fetch_emoticons():
-    response = requests.get("https://slack.com/api/emoji.list")
+    response = requests.post(
+        "https://slack.com/api/emoji.list",
+        headers={
+            'Content-Type': 'application/json; charset=utf-8',
+            'Authorization': f"Bearer {TOKEN}",
+        }
+    )
     raise_for_slack_status(response)
-    for key, value in response.json()['emoji']:
+    for key, value in response.json()['emoji'].items():
         yield model.ComparableEmoticon(
             name=key,
             url=value,

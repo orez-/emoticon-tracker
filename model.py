@@ -53,5 +53,5 @@ def get_image(url):
 
     return Image(
         raw_data=data,
-        created=dateutil.parser.parse(last_modified),
+        created=dateutil.parser.parse(last_modified) if last_modified else None,
     )

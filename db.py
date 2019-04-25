@@ -47,6 +47,8 @@ def _to_row(emoticon):
         'name': emoticon.name,
         'url': emoticon.url,
         'added_by': emoticon.added_by,
+        'image': None,
+        'added': None,
     }
 
     if emoticon.url.startswith('http'):
