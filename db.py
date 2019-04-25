@@ -111,7 +111,7 @@ def get_changes_since(since_date):
         emoticon_table.c.url,
         emoticon_table.c.added_by,
     ]).where(sqlalchemy.or_(
-        emoticon_table.c.added > since_date,
+        emoticon_table.c._row_created > since_date,
         emoticon_table.c.removed > since_date,
     )).order_by(emoticon_table.c.removed.is_(None))
 

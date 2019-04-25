@@ -42,7 +42,7 @@ def get_last_announcement_time():
 
 def _example_emoticons(emoticons):
     assert emoticons
-    display_emoticons = ' and '.join(map('({0.name})'.format, emoticons[:2]))
+    display_emoticons = ' and '.join(map(':{0.name}:'.format, emoticons[:2]))
     if len(emoticons) <= 2:
         return display_emoticons
     return f"including {display_emoticons}"
