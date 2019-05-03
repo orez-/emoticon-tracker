@@ -8,6 +8,8 @@ import db
 import slack
 import sync
 
+REMOVED = True
+ADDED = False
 
 _SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 ANNOUNCEMENT_FILE = os.path.join(_SCRIPT_DIR, '.last_announcement')
@@ -49,16 +51,16 @@ def _example_emoticons(emoticons):
 
 
 def get_change_message(changes):
-    is_are = "is" if len(changes.get(False) or changes.get(True)) == 1 else 'are'
+    is_are = "is" if len(changes.get(ADDED) or changes.get(REMOVED)) == 1 else 'are'
     clauses = []
-    if False in changes:
-        emoticons = changes[False]
+    if ADDED in changes:
+        emoticons = changes[ADDED]
         count = len(emoticons)
         number = _numbers.get(count, count)
         plural = '' if count == 1 else 's'
         clauses.append(f"{number} new emoticon{plural} ({_example_emoticons(emoticons)})")
-    if True in changes:
-        emoticons = changes[True]
+    if REMOVED in changes:
+        emoticons = changes[REMOVED]
         count = len(emoticons)
         number = _numbers.get(count, count)
         plural = '' if count == 1 else 's'
@@ -84,13 +86,9 @@ def announce_changes():
         return
 
     message = get_change_message(changes)
-    # hipchat.send('4528315', {  # test room
-    # hipchat.send('1738275', {  # emoticon requests
-    #     'color': 'purple',
-    #     'message': message,
-    #     'message_format': 'text',
-    # })
-    slack.send('#emoticon-requests', message)
+    message_payload = slack.send('#emoticon-requests', message)
+    for emoticon in changes[ADDED]:
+        slack.react(message_payload, emoticon.name)
 
     log_last_announcement(now)
     print(message)
