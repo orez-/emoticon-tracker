@@ -5,11 +5,39 @@ import requests
 import model
 
 
+class SlackError(Exception):
+    """Error returned from Slack endpoint."""
+
+    def __init__(self, response_json):
+        self.json = response_json
+
+    def __str__(self):
+        return f"Bad Slack response: {self.json}"
+
+    @classmethod
+    def get_exc(cls, response_json):
+        error = response_json.get('error')
+        cls = next(
+            (
+                subcls
+                for subcls in cls.__subclasses__()
+                if getattr(subcls, 'slack_error', '') == error
+            ),
+            cls,
+        )
+        return cls(response_json)
+
+
+class SlackAlreadyReactedError(SlackError):
+    """already_reacted Slack error."""
+    slack_error = "already_reacted"
+
+
 def raise_for_slack_status(response):
     response.raise_for_status()
     response_json = response.json()
     if response_json.get('ok') is False:
-        raise Exception(f"Bad Slack response: {response_json}")
+        raise SlackError.get_exc(response_json)
 
 
 def fetch_emoticons():
@@ -62,7 +90,11 @@ def react(original_message_payload, emoticon):
             'Authorization': f"Bearer {TOKEN}",
         },
     )
-    raise_for_slack_status(response)
+    try:
+        raise_for_slack_status(response)
+    except SlackAlreadyReactedError:
+        return False
+    return True
 
 
 TOKEN = os.environ.get('SLACK_USER_TOKEN')
