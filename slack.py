@@ -33,6 +33,11 @@ class SlackAlreadyReactedError(SlackError):
     slack_error = "already_reacted"
 
 
+class SlackTooManyReactionsError(SlackError):
+    """too_many_reactions Slack error."""
+    slack_error = "too_many_reactions"
+
+
 def raise_for_slack_status(response):
     response.raise_for_status()
     response_json = response.json()
