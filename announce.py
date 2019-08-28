@@ -89,10 +89,11 @@ def announce_changes():
         return
 
     message = get_change_message(changes)
-    message_payload = slack.send('#emoticon-requests', message)
-    slack.reply_to(
-        message_payload, ''.join(map(":{0.name}:".format, changes[ADDED][:MAX_REPLIES]))
-    )
+    message_payload = slack.send(os.environ['SLACK_EMOTICON_ANNOUNCE_CHANNEL'], message)
+    if len(changes[ADDED]) > 2:
+        slack.reply_to(
+            message_payload, ''.join(map(":{0.name}:".format, changes[ADDED][:MAX_REPLIES]))
+        )
 
     log_last_announcement(now)
     print(message)

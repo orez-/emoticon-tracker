@@ -126,13 +126,3 @@ def get_changes_since(since_date):
         ]
         for removed, rows in itertools.groupby(connection.execute(query), lambda row: row.removed)
     }
-
-
-def get_image(name):
-    query = (
-        sqlalchemy.select([emoticon_table.c.image])
-        .where(emoticon_table.c.name == name)
-        .order_by(emoticon_table.c.added.desc())
-        .limit(1)
-    )
-    return connection.execute(query).scalar()
