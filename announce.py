@@ -11,6 +11,7 @@ import sync
 REMOVED = True
 ADDED = False
 
+MAX_REPLIES = 50
 MAX_REACTIONS = 20
 
 _SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -89,8 +90,9 @@ def announce_changes():
 
     message = get_change_message(changes)
     message_payload = slack.send('#emoticon-requests', message)
-    for emoticon in changes[ADDED][:MAX_REACTIONS]:
-        slack.react(message_payload, emoticon.name)
+    slack.reply_to(
+        message_payload, ''.join(map(":{0.name}:".format, changes[ADDED][:MAX_REPLIES]))
+    )
 
     log_last_announcement(now)
     print(message)

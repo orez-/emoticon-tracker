@@ -82,6 +82,28 @@ def send(channel, message):
     return response.json()
 
 
+def reply_to(original_message_payload, message):
+    response = requests.post(
+        "https://slack.com/api/chat.postMessage",
+        json={
+            "channel": original_message_payload['channel'],
+            "thread_ts": original_message_payload['ts'],
+            "attachments": [
+                {
+                    "text": message,
+                    "color": "#a256ed",
+                }
+            ]
+        },
+        headers={
+            'Content-Type': 'application/json; charset=utf-8',
+            'Authorization': f"Bearer {TOKEN}",
+        },
+    )
+    raise_for_slack_status(response)
+    return response.json()
+
+
 def react(original_message_payload, emoticon):
     response = requests.post(
         "https://slack.com/api/reactions.add",
