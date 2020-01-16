@@ -25,7 +25,7 @@ This looks like:
 
 ```bash
 python3 -m venv venv
-venv/bin/pip install -r requirements.txt
+./venv/bin/pip install -r requirements.txt
 ```
 
 Python3.6+ is required.
@@ -35,7 +35,8 @@ Two environment variables are required to run the application:
 - `SLACK_EMOTICON_ANNOUNCE_CHANNEL` is the channel to which emoticon update announcements will be posted.
   It should be of the format eg `#emoticon-updates`, but can also be a channel id such as `C12345678`
 - `SLACK_USER_TOKEN` is the access token of the user or bot posting the messages and fetching the emoticons.
-  User tokens can be found by inspecting the headers of requests in the Slack chat web app.
+  See [this page](https://github.com/jackellenberger/emojme#finding-a-slack-token) for how to find a user token.
+  The user token must start with `xoxs`.
 
 ### Configure the crons
 The Emoticon Tracker project exposes two scripts: [`sync.py`](sync.py) and [`announce.py`](announce.py).
