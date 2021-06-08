@@ -1,5 +1,5 @@
 attrs==18.1.0
-Pillow==5.2.0
+Pillow==8.2.0
 psycopg2-binary==2.7.5
 python-dateutil==2.7.3
 pytz==2018.5
